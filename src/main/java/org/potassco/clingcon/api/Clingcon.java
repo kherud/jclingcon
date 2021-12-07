@@ -5,8 +5,6 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
-import org.potassco.clingcon.api.callback.AstCallback;
-import org.potassco.clingcon.api.struct.Value;
 import org.potassco.clingo.api.types.NativeSize;
 import org.potassco.clingo.api.types.NativeSizeByReference;
 

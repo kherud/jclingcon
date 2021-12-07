@@ -1,4 +1,4 @@
-package org.potassco.clingcon.api.enums;
+package org.potassco.clingcon.api;
 
 import java.util.HashMap;
 import java.util.Map;

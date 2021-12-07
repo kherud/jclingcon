@@ -1,4 +1,4 @@
-package org.potassco.clingcon.api.callback;
+package org.potassco.clingcon.api;
 
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
