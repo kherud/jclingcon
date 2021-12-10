@@ -1,20 +1,28 @@
 package org.potassco.clingcon.api;
 
+import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
-import org.potassco.clingo.api.ErrorChecking;
-import org.potassco.clingo.api.types.NativeSize;
-import org.potassco.clingo.api.types.NativeSizeByReference;
+import org.potassco.clingo.Clingo;
+import org.potassco.clingo.ErrorChecking;
+import org.potassco.clingo.ast.Ast;
+import org.potassco.clingo.ast.AstCallback;
 import org.potassco.clingo.control.Control;
-import org.potassco.clingo.symbol.Function;
+import org.potassco.clingo.internal.NativeSize;
+import org.potassco.clingo.internal.NativeSizeByReference;
+import org.potassco.clingo.solving.Model;
+import org.potassco.clingo.solving.SolveEventCallback;
 import org.potassco.clingo.symbol.Symbol;
+import org.potassco.clingo.theory.Theory;
 
-public class Theory implements ErrorChecking {
+import java.util.function.Function;
+
+public class ClingconTheory extends Theory implements ErrorChecking {
 
     private final Pointer theory;
     private Control control;
 
-    public Theory() {
+    public ClingconTheory() {
         PointerByReference theory = new PointerByReference();
         checkError(Clingcon.INSTANCE.clingcon_create(theory));
         this.theory = theory.getValue();
@@ -29,6 +37,31 @@ public class Theory implements ErrorChecking {
     public void register(Control control) {
         this.control = control;
         checkError(Clingcon.INSTANCE.clingcon_register(this.theory, control.getPointer()));
+    }
+
+    public org.potassco.clingo.ast.AstCallback rewriteAst(Function<Ast, Void> add) {
+        AstCallback addCallback = (Pointer ast, Pointer data) -> {
+            add.apply(new Ast(ast));
+            return true;
+        };
+        return (Pointer ast, Pointer data) -> {
+            Clingo.INSTANCE.clingo_ast_acquire(ast);
+            checkError(Clingcon.INSTANCE.clingcon_rewrite_ast(theory, ast, addCallback, control.getPointer()));
+            return true;
+        };
+    }
+
+    public SolveEventCallback onModel() {
+        return new SolveEventCallback() {
+            @Override
+            public void onModel(Model model) {
+                checkError(Clingcon.INSTANCE.clingcon_on_model(theory, model.getPointer()));
+            }
+        };
+    }
+
+    public Assignment getAssignment(Model model) {
+        return new Assignment(theory, model.getThreadId());
     }
 
     public void prepare() {
@@ -52,5 +85,13 @@ public class Theory implements ErrorChecking {
     public Pointer getPointer() {
         return theory;
     }
+
+    // public class RewriteAstCallback extends AstCallback {
+    //     @Override
+    //     public boolean call(Ast ast, Pointer data) {
+    //         Clingcon.INSTANCE.clingcon_rewrite_ast(theory);
+    //         return false;
+    //     }
+    // }
 
 }

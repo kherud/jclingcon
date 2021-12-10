@@ -1,7 +1,7 @@
 import org.junit.Test;
 import org.potassco.clingcon.api.Clingcon;
-import org.potassco.clingcon.api.Theory;
-import org.potassco.clingo.api.Clingo;
+import org.potassco.clingcon.api.ClingconTheory;
+import org.potassco.clingo.Clingo;
 import org.potassco.clingo.control.Control;
 
 public class TheoryTest {
@@ -14,14 +14,14 @@ public class TheoryTest {
 
     @Test
     public void testCreateTheory() {
-        Theory theory = new Theory();
+        ClingconTheory theory = new ClingconTheory();
         theory.destroy();
     }
 
     @Test
     public void testRegisterTheory() {
         Control control = new Control("{a}.", null);
-        Theory theory = new Theory();
+        ClingconTheory theory = new ClingconTheory();
         theory.register(control);
         theory.destroy();
     }
@@ -29,7 +29,7 @@ public class TheoryTest {
     @Test
     public void testPrepare() {
         Control control = new Control("{a}.", null);
-        Theory theory = new Theory();
+        ClingconTheory theory = new ClingconTheory();
         theory.register(control);
         theory.prepare();
         theory.destroy();

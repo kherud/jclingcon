@@ -5,8 +5,9 @@ import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
-import org.potassco.clingo.api.types.NativeSize;
-import org.potassco.clingo.api.types.NativeSizeByReference;
+import org.potassco.clingo.ast.AstCallback;
+import org.potassco.clingo.internal.NativeSize;
+import org.potassco.clingo.internal.NativeSizeByReference;
 
 public interface Clingcon extends Library {
     // A shared library is a singleton
@@ -116,7 +117,7 @@ public interface Clingcon extends Library {
      *
      * Does not throw.
      */
-    void clingcon_assignment_get_value(Pointer theory, int thread_id, NativeSize index, Value value);
+    void clingcon_assignment_get_value(Pointer theory, int thread_id, NativeSize index, Value.ByReference value);
 
     /**
      * Callback for statistic updates.
