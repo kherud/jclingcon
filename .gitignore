@@ -2,3 +2,4 @@
 **/.directory
 *.log
 **/target
+**/.DS_Store
