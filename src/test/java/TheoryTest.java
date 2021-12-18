@@ -1,7 +1,7 @@
 import org.junit.Test;
 import org.potassco.clingcon.api.Clingcon;
 import org.potassco.clingcon.api.ClingconTheory;
-import org.potassco.clingo.Clingo;
+import org.potassco.clingo.internal.Clingo;
 import org.potassco.clingo.control.Control;
 
 public class TheoryTest {

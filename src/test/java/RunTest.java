@@ -18,7 +18,7 @@ public class RunTest {
         ClingconTheory theory = new ClingconTheory();
         theory.register(control);
         try (ProgramBuilder builder = new ProgramBuilder(control)) {
-            Ast.parseString(program, theory.rewriteAst(builder::add));
+            Ast.parseString(program, theory.rewriteAst(builder));
         }
         control.ground();
         theory.prepare();

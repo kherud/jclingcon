@@ -24,8 +24,7 @@
             <artifactId>jna-platform</artifactId>
             <version>5.9.0</version>
         </dependency>
-
-        <dependency> <!-- JNA dependency -->
+        <dependency>
             <groupId>org.potassco</groupId>
             <artifactId>clingo</artifactId>
             <version>1.0-SNAPSHOT</version>
