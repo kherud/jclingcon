@@ -1,6 +1,6 @@
 import org.junit.Test;
-import org.potassco.clingcon.api.Assignment;
-import org.potassco.clingcon.api.ClingconTheory;
+import org.potassco.clingcon.Assignment;
+import org.potassco.clingcon.ClingconTheory;
 import org.potassco.clingo.ast.Ast;
 import org.potassco.clingo.ast.ProgramBuilder;
 import org.potassco.clingo.control.Control;
@@ -37,7 +37,7 @@ public class JClingconDemo {
         LoggerCallback logger = (code, message) -> System.out.printf("[%s] %s", code.name(), message);
 
         ClingconTheory theory = new ClingconTheory();
-        Control control = new Control(logger, 10000, "0");
+        Control control = new Control(logger, 10000, "20");
         theory.register(control);
         try (ProgramBuilder builder = new ProgramBuilder(control)) {
             Ast.parseString(program, theory.rewriteAst(builder), logger, 10000);
@@ -49,7 +49,7 @@ public class JClingconDemo {
         try (SolveHandle handle = control.solve(Collections.emptyList(), theory.onModel(), SolveMode.YIELD)) {
             while (handle.hasNext()) {
                 Model model = handle.next();
-                System.out.println("Model:" + model);
+                System.out.println("Model " + model.getNumber() + ": " + model);
                 Set<Assignment.Tuple> modelAssignments = new HashSet<>();
                 for (Assignment.Tuple tuple : theory.getAssignment(model)) {
                     System.out.println("Assignment: " + tuple);

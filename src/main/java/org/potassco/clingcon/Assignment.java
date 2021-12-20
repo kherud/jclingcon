@@ -17,7 +17,7 @@
  * site: http://www.fsf.org.
  */
 
-package org.potassco.clingcon.api;
+package org.potassco.clingcon;
 
 import com.sun.jna.Pointer;
 import org.potassco.clingo.internal.NativeSize;

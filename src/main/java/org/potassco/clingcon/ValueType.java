@@ -17,7 +17,7 @@
  * site: http://www.fsf.org.
  */
 
-package org.potassco.clingcon.api;
+package org.potassco.clingcon;
 
 import java.util.HashMap;
 import java.util.Map;

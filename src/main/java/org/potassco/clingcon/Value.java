@@ -17,7 +17,7 @@
  * site: http://www.fsf.org.
  */
 
-package org.potassco.clingcon.api;
+package org.potassco.clingcon;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.Union;

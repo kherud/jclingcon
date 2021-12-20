@@ -17,7 +17,7 @@
  * site: http://www.fsf.org.
  */
 
-package org.potassco.clingcon.api;
+package org.potassco.clingcon;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
@@ -29,8 +29,11 @@ import org.potassco.clingo.internal.NativeSize;
 import org.potassco.clingo.internal.NativeSizeByReference;
 import org.potassco.clingo.solving.Model;
 import org.potassco.clingo.solving.SolveEventCallback;
+import org.potassco.clingo.statistics.Statistics;
 import org.potassco.clingo.symbol.Symbol;
 import org.potassco.clingo.theory.Theory;
+
+import java.util.NoSuchElementException;
 
 public class ClingconTheory extends Theory {
 
@@ -43,23 +46,47 @@ public class ClingconTheory extends Theory {
         this.theory = theory.getValue();
     }
 
+    /**
+     * Configure theory manually (without using clingo's options facility).
+     * <p>
+     * Note that the theory has to be configured before registering it and cannot
+     * be reconfigured.
+     *
+     * @param key   the key of the option
+     * @param value the value of the option
+     */
     public void configure(String key, String value) {
         if (this.control != null)
             throw new IllegalStateException("you have to configure the theory before registering it");
         Clingcon.check(Clingcon.INSTANCE.clingcon_configure(this.theory, key, value));
     }
 
+    /**
+     * Register the theory with a control object.
+     *
+     * @param control the control object to register the theory
+     */
     public void register(Control control) {
         this.control = control;
         Clingcon.check(Clingcon.INSTANCE.clingcon_register(this.theory, control.getPointer()));
     }
 
+    /**
+     * Rewrite asts before adding them via the given program builder.
+     *
+     * @param builder the program builder to add
+     * @return callback to rewrite an ast
+     */
     public AstCallback rewriteAst(ProgramBuilder builder) {
-        AstCallback addCallback = builder::add;
         return (Ast ast) ->
-            Clingcon.check(Clingcon.INSTANCE.clingcon_rewrite_ast(theory, ast.getPointer(), addCallback, control.getPointer()));
+                Clingcon.check(Clingcon.INSTANCE.clingcon_rewrite_ast(theory, ast.getPointer(), builder::add, control.getPointer()));
     }
 
+    /**
+     * Callback to inform the theory on found models
+     *
+     * @return the clingcon on model callback
+     */
     public SolveEventCallback onModel() {
         return new SolveEventCallback() {
             @Override
@@ -69,23 +96,41 @@ public class ClingconTheory extends Theory {
         };
     }
 
+    /**
+     * @param model the last model
+     * @return the current assignment
+     */
     public Assignment getAssignment(Model model) {
         return new Assignment(theory, model.getThreadId());
     }
 
+    /**
+     * Prepare the theory between grounding and solving
+     */
     public void prepare() {
         if (this.control == null)
             throw new IllegalStateException("you have to register the theory first");
         Clingcon.check(Clingcon.INSTANCE.clingcon_prepare(this.theory, this.control.getPointer()));
     }
 
+    /**
+     * Destroy the theory. Currently no way to unregister a theory.
+     */
     public void destroy() {
         Clingcon.check(Clingcon.INSTANCE.clingcon_destroy(this.theory));
     }
 
+    /**
+     * Obtain a symbol
+     *
+     * @param symbol the symbol to lookup
+     * @return the found symbol
+     */
     public Symbol getSymbol(Symbol symbol) {
         NativeSizeByReference nativeSizeByRef = new NativeSizeByReference();
-        Clingcon.INSTANCE.clingcon_lookup_symbol(theory, symbol.getLong(), nativeSizeByRef);
+        byte exists = Clingcon.INSTANCE.clingcon_lookup_symbol(theory, symbol.getLong(), nativeSizeByRef);
+        if (exists == 0)
+            throw new NoSuchElementException("symbol does not exist");
         NativeSize index = new NativeSize(nativeSizeByRef.getValue());
         long symbolId = Clingcon.INSTANCE.clingcon_get_symbol(theory, index);
         return Symbol.fromLong(symbolId);
