@@ -23,6 +23,7 @@ import com.sun.jna.Pointer;
 import org.potassco.clingo.internal.NativeSize;
 import org.potassco.clingo.internal.NativeSizeByReference;
 import org.potassco.clingo.symbol.Symbol;
+import org.potassco.clingo.theory.Value;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

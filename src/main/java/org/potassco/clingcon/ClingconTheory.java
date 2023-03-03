@@ -113,7 +113,7 @@ public class ClingconTheory extends Theory {
     }
 
     /**
-     * Destroy the theory. Currently no way to unregister a theory.
+     * Destroy the theory. Currently, no way to unregister a theory.
      */
     public void destroy() {
         Clingcon.check(Clingcon.INSTANCE.clingcon_destroy(this.theory));

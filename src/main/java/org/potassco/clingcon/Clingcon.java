@@ -25,6 +25,9 @@ import com.sun.jna.ptr.PointerByReference;
 import org.potassco.clingo.ast.AstCallback;
 import org.potassco.clingo.internal.NativeSize;
 import org.potassco.clingo.internal.NativeSizeByReference;
+import org.potassco.clingo.theory.Value;
+import org.potassco.clingo.theory.ValueType;
+import org.potassco.clingo.theory.ValueTypeConverter;
 
 import java.util.Collections;
 
@@ -33,24 +36,7 @@ public interface Clingcon extends Library {
 
     static Clingcon initLibrary() {
         DefaultTypeMapper mapper = new DefaultTypeMapper();
-        TypeConverter converter = new TypeConverter() {
-            @Override
-            public Object toNative(Object value, ToNativeContext ctx) {
-                if (value == null) {
-                    return ValueType.SYMBOL.getValue();
-                } else {
-                    return ((ValueType)value).getValue();
-                }
-            }
-            @Override
-            public Object fromNative(Object value, FromNativeContext context) {
-                return ValueType.fromValue(((Integer)value));
-            }
-            @Override
-            public Class<?> nativeType() {
-                return Integer.class;
-            }
-        };
+        ValueTypeConverter converter = new ValueTypeConverter();
         mapper.addTypeConverter(ValueType.class, converter);
         return Native.load("clingcon", Clingcon.class, Collections.singletonMap(Library.OPTION_TYPE_MAPPER, mapper));
     }
@@ -125,7 +111,7 @@ public interface Clingcon extends Library {
     /**
      * Obtain a symbol index which can be used to get the value of a symbol.
      * <p>
-     * Returns true if the symbol exists.
+     * Returns whether the symbol exists.
      * Does not throw.
      */
     byte clingcon_lookup_symbol(Pointer theory, long symbol, NativeSizeByReference index);
@@ -147,7 +133,7 @@ public interface Clingcon extends Library {
     /**
      * Move to the next index that has a value.
      * <p>
-     * Returns true if the updated index is valid.
+     * Returns whether the updated index is valid.
      * Does not throw.
      */
     byte clingcon_assignment_next(Pointer theory, int thread_id, NativeSizeByReference index);
@@ -160,7 +146,7 @@ public interface Clingcon extends Library {
     byte clingcon_assignment_has_value(Pointer theory, int thread_id, NativeSize index);
 
     /**
-     * Get the symbol and it's value at the given index.
+     * Get the symbol and its value at the given index.
      * <p>
      * Does not throw.
      */

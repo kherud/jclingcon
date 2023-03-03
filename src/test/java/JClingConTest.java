@@ -1,9 +1,9 @@
 import org.junit.Assert;
 import org.potassco.clingcon.Assignment;
 import org.potassco.clingcon.ClingconTheory;
-import org.potassco.clingcon.Value;
-import org.potassco.clingcon.ValueType;
-import org.potassco.clingcon.ValueUnion;
+import org.potassco.clingo.theory.Value;
+import org.potassco.clingo.theory.ValueType;
+import org.potassco.clingo.theory.ValueUnion;
 import org.potassco.clingo.ast.Ast;
 import org.potassco.clingo.ast.ProgramBuilder;
 import org.potassco.clingo.control.Control;
