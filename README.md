@@ -1,7 +1,7 @@
 ![Clingo Version 5.6.2](https://img.shields.io/badge/clingo-5.6.2-informational)
-![Clingo-dl Version 1.4.0](https://img.shields.io/badge/clingcon-5.2.0-informational)
+![ClingCon Version 5.2.0](https://img.shields.io/badge/clingcon-5.2.0-informational)
 
-# Java Bindings for Clingo-dl: An extension of clingo to handle constraints over integers
+# Java Bindings for ClingCon: An extension of Clingo to handle constraints over integers
 
 **This non-official repository contains Java bindings for Clingcon.**
 
@@ -21,7 +21,7 @@ First, make sure to install the Clingo shared library (see the [official Clingo 
 - macos: libclingo.dylib (pre-compiled arm64 provided)
 - windows: clingo.dll
 
-Second, install the Clingo-dl shared library (see [official Clingcon repo](https://github.com/potassco/clingcon)).
+Second, install the ClingCon shared library (see [official ClingCon repo](https://github.com/potassco/clingcon)).
 - linux: libclingcon.so (pre-compiled x86-64 provided)
 - macos: libclingcon.dylib (pre-compiled arm64 provided)
 - windows: clingcon.dll
