@@ -18,31 +18,33 @@
  */
 
 package org.potassco.clingcon;
+
+import java.util.Objects;
+
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
-import com.sun.jna.Union;
 import org.potassco.clingo.symbol.Symbol;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Structure.FieldOrder({"type", "value"})
 public class Value extends Structure {
 
+	// all fields annotated with SuppressWarnings are required to be public by JNA
+	@SuppressWarnings("WeakerAccess")
 	public int type;
 	public ValueUnion value;
 
-	public Value() {
-		super();
-	}
-
-	public Value(int type, ValueUnion field1) {
+	public Value(int type, ValueUnion value) {
 		super();
 		this.type = type;
-		this.value = field1;
+		this.value = value;
 	}
 
-	public Value(Pointer peer) {
+	@SuppressWarnings("WeakerAccess")
+	Value() {
+		super();
+	}
+
+	Value(Pointer peer) {
 		super(peer);
 	}
 
@@ -60,6 +62,20 @@ public class Value extends Structure {
 		}
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		Value value1 = (Value) o;
+		return type == value1.type && value.equals(value1.value);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(type, value);
+	}
+
 	public ValueType getType() {
 		return ValueType.fromValue(type);
 	}
@@ -68,44 +84,8 @@ public class Value extends Structure {
 		return value;
 	}
 
-	public static class ByReference extends Value implements Structure.ByReference { }
+	static class ByReference extends Value implements Structure.ByReference { }
 
-	public static class ByValue extends Value implements Structure.ByValue { }
+	static class ByValue extends Value implements Structure.ByValue { }
 
-	public static class ValueUnion extends Union {
-
-		public int int_number;
-		public double double_number;
-		public long symbol;
-
-		public ValueUnion() {
-			super();
-		}
-
-		public ValueUnion(int int_number) {
-			super();
-			this.int_number = int_number;
-			setType(Integer.TYPE);
-		}
-
-		public ValueUnion(double double_number) {
-			super();
-			this.double_number = double_number;
-			setType(Double.TYPE);
-		}
-
-		public ValueUnion(long symbol) {
-			super();
-			this.symbol = symbol;
-			setType(Long.TYPE);
-		}
-
-		public ValueUnion(Pointer peer) {
-			super(peer);
-		}
-
-		public static class ByReference extends ValueUnion implements Structure.ByReference { }
-
-		public static class ByValue extends ValueUnion implements Structure.ByValue { }
-	}
 }

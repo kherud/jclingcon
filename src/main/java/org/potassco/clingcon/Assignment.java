@@ -25,6 +25,8 @@ import org.potassco.clingo.internal.NativeSizeByReference;
 import org.potassco.clingo.symbol.Symbol;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class Assignment implements Iterable<Assignment.Tuple> {
 
@@ -44,31 +46,41 @@ public class Assignment implements Iterable<Assignment.Tuple> {
 
         return new Iterator<>() {
             private final NativeSizeByReference index = nativeSizeByReference;
+            private boolean continueIteration = true;
+            private boolean hasNext = true;
 
             @Override
             public boolean hasNext() {
-                return Clingcon.INSTANCE.clingcon_assignment_next(theory, threadId, index) > 0;
+                if (continueIteration) {
+                    hasNext = Clingcon.INSTANCE.clingcon_assignment_next(theory, threadId, index) > 0;
+                    continueIteration = false;
+                }
+                return hasNext;
             }
 
             @Override
             public Tuple next() {
-                NativeSize index = new NativeSize(this.index.getValue());
-                Value valueByReference = new Value();
-                long symbolLong = Clingcon.INSTANCE.clingcon_get_symbol(theory, index);
-                Symbol symbol = Symbol.fromLong(symbolLong);
+                if (hasNext()) {
+                    continueIteration = true;
+                    NativeSize index = new NativeSize(this.index.getValue());
+                    Value valueByReference = new Value();
+                    long symbolLong = Clingcon.INSTANCE.clingcon_get_symbol(theory, index);
+                    Symbol symbol = Symbol.fromLong(symbolLong);
 
-                Clingcon.INSTANCE.clingcon_assignment_get_value(theory, threadId, index, valueByReference);
+                    Clingcon.INSTANCE.clingcon_assignment_get_value(theory, threadId, index, valueByReference);
 
-                return new Tuple(symbol, valueByReference);
+                    return new Tuple(symbol, valueByReference);
+                }
+                throw new NoSuchElementException();
             }
         };
     }
 
-    public static class Tuple {
+    public static final class Tuple {
         private final Symbol symbol;
         private final Value value;
 
-        private Tuple(Symbol symbol, Value value) {
+        public Tuple(Symbol symbol, Value value) {
             this.symbol = symbol;
             this.value = value;
         }
@@ -84,6 +96,19 @@ public class Assignment implements Iterable<Assignment.Tuple> {
         @Override
         public String toString() {
             return symbol.toString() + "=" + value.toString();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Tuple tuple = (Tuple) o;
+            return symbol.equals(tuple.symbol) && value.equals(tuple.value);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(symbol, value);
         }
     }
 }

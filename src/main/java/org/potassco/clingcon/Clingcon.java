@@ -95,13 +95,13 @@ public interface Clingcon extends Library {
 
     /**
      * Destroy the theory.
-     * Currently no way to unregister a theory.
+     * Currently, no way to unregister a theory.
      */
     byte clingcon_destroy(Pointer theory);
 
     /**
      * Configure theory manually (without using clingo's options facility).
-     *
+     * <p>
      * Note that the theory has to be configured before registering it and cannot
      * be reconfigured.
      */
@@ -124,7 +124,7 @@ public interface Clingcon extends Library {
 
     /**
      * Obtain a symbol index which can be used to get the value of a symbol.
-     *
+     * <p>
      * Returns true if the symbol exists.
      * Does not throw.
      */
@@ -132,21 +132,21 @@ public interface Clingcon extends Library {
 
     /**
      * Obtain the symbol at the given index.
-     *
+     * <p>
      * Does not throw.
      */
     long clingcon_get_symbol(Pointer theory, NativeSize index);
 
     /**
      * Initialize index so that it can be used with clingcon_assignment_next.
-     *
+     * <p>
      * Does not throw.
      */
     void clingcon_assignment_begin(Pointer theory, int thread_id, NativeSizeByReference index);
 
     /**
      * Move to the next index that has a value.
-     *
+     * <p>
      * Returns true if the updated index is valid.
      * Does not throw.
      */
@@ -154,21 +154,21 @@ public interface Clingcon extends Library {
 
     /**
      * Check if the symbol at the given index has a value.
-     *
+     * <p>
      * Does not throw.
      */
     byte clingcon_assignment_has_value(Pointer theory, int thread_id, NativeSize index);
 
     /**
      * Get the symbol and it's value at the given index.
-     *
+     * <p>
      * Does not throw.
      */
     void clingcon_assignment_get_value(Pointer theory, int thread_id, NativeSize index, Value value);
 
     /**
      * Callback for statistic updates.
-     *
+     * <p>
      * Best add statistics under a subkey with the name of your theory.
      */
     byte clingcon_on_statistics(Pointer theory, Pointer step, Pointer accu);

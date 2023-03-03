@@ -19,6 +19,8 @@
 
 package org.potassco.clingcon;
 
+import java.util.NoSuchElementException;
+
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.PointerByReference;
 import org.potassco.clingo.ast.Ast;
@@ -29,11 +31,8 @@ import org.potassco.clingo.internal.NativeSize;
 import org.potassco.clingo.internal.NativeSizeByReference;
 import org.potassco.clingo.solving.Model;
 import org.potassco.clingo.solving.SolveEventCallback;
-import org.potassco.clingo.statistics.Statistics;
 import org.potassco.clingo.symbol.Symbol;
 import org.potassco.clingo.theory.Theory;
-
-import java.util.NoSuchElementException;
 
 public class ClingconTheory extends Theory {
 

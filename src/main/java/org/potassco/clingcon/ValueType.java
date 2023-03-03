@@ -40,16 +40,15 @@ public enum ValueType {
 	        );
 	    }
 	}
-
-	public static ValueType fromValue(int code) {
-		return mapping.get(code);
-	}
-
-    private final int code;
+	private final int code;
 
     ValueType(int code) {
         this.code = code;
     }
+
+	public static ValueType fromValue(int code) {
+		return mapping.get(code);
+	}
 
     public int getValue() {
         return code;
